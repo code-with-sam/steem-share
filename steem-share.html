@@ -8,12 +8,14 @@
       font-family: inconsolate, 'courier new', courier, monospace;
     }
     .ss-overlay {
+      display: none;
       position: fixed;
       top: 0; right: 0; bottom: 0; left:0;
       background: rgba(0,0,0,0.5);
       z-index: 1000;
     }
     .ss-modal {
+      display: none;
       position: fixed;
       top: 50%;
       left: 50%;
@@ -56,13 +58,20 @@
   <body>
 
     Hello world
-    <button class="ss-steem-share">Share To Steem -></button>
+    <br>
+    <br>
+    <button class="ss-steem-share"
+    data-title="This is a test from steem share",
+    data-category="testing-testing",
+    data-imgUrl="https://i.imgsafe.org/a7/a751d45421.jpeg",
+    data-content="Well would you look at that, I think this will be a pretty cool addition to the eco-system"
+    >Share To Steem -></button>
 
     <div class="ss-modal">
       <h2 class="ss-heading-2">Steem Share</h2>
       <p class="ss-p">Enter your username</p>
       <input class="ss-username" type="text" placeholder="username">
-      <a class="ss-steemconnect-btn" href="#">Post With Steemconnect</a>
+      <a class="ss-steemconnect-btn" href="#" target="_blank">Post With Steemconnect</a>
     </div>
     <div class="ss-overlay"></div>
 
@@ -73,9 +82,40 @@
 
     <script>
 
-    $('.steem-share').on('click', (e) => {
 
+    $('.ss-steem-share').on('click', (e) => {
+        //open modal
+        $('.ss-modal, .ss-overlay').fadeIn(200);
     })
+
+     $('.ss-username').keyup(( e ) => {
+
+       // update steem connect link
+       let data = $('.ss-steem-share').data()
+       let shareDetails = {
+         category: data.category,
+         author: $('.ss-username').val(),
+         permlink: randomString() + '-post',
+         title: data.title,
+         body: data.content,
+       }
+       console.log(shareDetails)
+       let steemconnectLink = `https://v2.steemconnect.com/sign/comment?parent_permlink=${shareDetails.category}&author=${shareDetails.author}&permlink=${shareDetails.permlink}&title=${shareDetails.title}&body=${shareDetails.body}`
+       console.log(steemconnectLink)
+
+      $('.ss-steemconnect-btn').attr('href', steemconnectLink);
+
+     });
+
+     function randomString() {
+       let string = ''
+       let allowedChars = "abcdefghijklmnopqrstuvwxyz0123456789";
+       for (var i = 0; i < 32; i++){
+         string += allowedChars.charAt(Math.floor(Math.random() * allowedChars.length));
+       }
+       return string;
+   }
+
 /*
   -> Click on Post To Steem Button
   -> modal posts up to enter username
@@ -94,7 +134,7 @@
 
 */
 
-// https://v2.steemconnect.com/sign/comment?parent_permlink=category&author=author&permlink=permlink&title=title&body=body
+//
     </script>
   </body>
 </html>
