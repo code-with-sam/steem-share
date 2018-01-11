@@ -1,6 +1,8 @@
+<doctype html>
+
 <html>
   <head>
-
+  <meta charset="utf8">
   <style>
     * {box-sizing: border-box;}
     body {
@@ -9,13 +11,16 @@
     }
     .ss-overlay {
       display: none;
+      opacity: 0;
       position: fixed;
       top: 0; right: 0; bottom: 0; left:0;
       background: rgba(0,0,0,0.5);
       z-index: 1000;
+      transition: opacity 200ms;
     }
     .ss-modal {
       display: none;
+      opacity: 0;
       position: fixed;
       top: 50%;
       left: 50%;
@@ -28,13 +33,19 @@
       text-align: center;
       border-radius: 4px;
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+      transition: opacity 200ms;
+    }
+    .ss-active {
+      display: block;
+    }
+    .ss-active-opacity {
+      opacity: 1;
     }
     .ss-heading-2 {
       margin: 20px 0 5px;
     }
     .ss-p {
       margin: 5px 0 30px;
-
     }
     .ss-username {
       display: block;
@@ -79,15 +90,9 @@
     <button class="ss-steem-share"
     data-title="This is a test from steem share",
     data-category="testing-testing",
-    data-imgUrl="https://i.imgsafe.org/a7/a751d45421.jpeg",
+    data-image="https://i.imgsafe.org/a7/a751d45421.jpeg",
     data-content="Well would you look at that, I think this will be a pretty cool addition to the eco-system"
     >Share To Steem -></button>
-
-
-    <script
-  src="https://code.jquery.com/jquery-3.2.1.min.js"
-  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-  crossorigin="anonymous"></script>
 
     <script>
     let modalTemplate =
@@ -96,38 +101,44 @@
           <p class="ss-p">Enter your username</p>
           <input class="ss-username" type="text" placeholder="username">
           <a class="ss-steemconnect-btn" href="#" target="_blank">Post With Steemconnect</a>
-          <span class="ss-close-modal">&#43;</span>
+          <span class="ss-close-modal" >&#43;</span>
         </div>
         <div class="ss-overlay"></div>`;
 
-    $('body').append(modalTemplate)
+    document.querySelector('body').innerHTML += modalTemplate
 
-    $('.ss-steem-share').on('click', (e) => {
-        $('.ss-modal, .ss-overlay').fadeIn(200);
+    let modal = document.querySelector('.ss-modal');
+    let overlay = document.querySelector('.ss-overlay');
+
+    document.querySelector('.ss-steem-share').addEventListener('click', () => {
+      overlay.classList.add('ss-active')
+      modal.classList.add('ss-active')
+      setTimeout(()=> {
+        overlay.classList.add('ss-active-opacity')
+        modal.classList.add('ss-active-opacity')
+      }, 50)
     })
 
-    $('.ss-close-modal').on('click', (e) => {
-        $('.ss-modal, .ss-overlay').fadeOut(200);
+    document.querySelector('.ss-close-modal').addEventListener('click', () => {
+      overlay.classList.remove('ss-active','ss-active-opacity')
+      modal.classList.remove('ss-active','ss-active-opacity')
     })
 
-     $('.ss-username').keyup(( e ) => {
+    document.querySelector('.ss-username').addEventListener('keyup', () => {
+      let data = document.querySelector('.ss-steem-share').dataset
+      console.log(data.image)
 
-       // update steem connect link
-       let data = $('.ss-steem-share').data()
        let shareDetails = {
          category: data.category,
-         author: $('.ss-username').val(),
+         author: document.querySelector('.ss-username').value,
          permlink: randomString() + '-post',
          title: data.title,
-         body: data.content,
+         body: encodeURIComponent(`![${data.image}](${data.image}) ${data.content}`)
        }
-       console.log(shareDetails)
-       let steemconnectLink = `https://v2.steemconnect.com/sign/comment?parent_permlink=${shareDetails.category}&author=${shareDetails.author}&permlink=${shareDetails.permlink}&title=${shareDetails.title}&body=${shareDetails.body}`
-       console.log(steemconnectLink)
 
-      $('.ss-steemconnect-btn').attr('href', steemconnectLink);
-
-     });
+      let steemconnectLink = `https://v2.steemconnect.com/sign/comment?parent_permlink=${shareDetails.category}&author=${shareDetails.author}&permlink=${shareDetails.permlink}&title=${shareDetails.title}&body=${shareDetails.body}`
+       document.querySelector('.ss-steemconnect-btn').setAttribute('href', steemconnectLink);
+    });
 
      function randomString() {
        let string = ''
@@ -137,26 +148,6 @@
        }
        return string;
    }
-
-/*
-  -> Click on Post To Steem Button
-  -> modal posts up to enter username
-  -> connects to steem connect - get access for posting rights
-  -> posts content to their steem feed
-  ->
-  -> plugin include {
-  	showReSteem: False,
-  	showPostToSteem: True,
-  	imageUrl: ‘’,
-  	postContent: ‘’,
-    category: '',
-  	allowUserAddition: true,
-    includeTopLink: true
-  }
-
-*/
-
-//
     </script>
   </body>
 </html>
