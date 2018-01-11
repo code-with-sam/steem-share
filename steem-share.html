@@ -22,19 +22,26 @@
       transform: translate(-50%,-50%);
       background-color: #fff;
       z-index: 1100;
-      width: 450px;
+      width: 400px;
       max-width: 70%;
-      padding: 30px 10px;
+      padding: 10px 10px;
       text-align: center;
       border-radius: 4px;
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
     }
+    .ss-heading-2 {
+      margin: 20px 0 5px;
+    }
+    .ss-p {
+      margin: 5px 0 30px;
+
+    }
     .ss-username {
       display: block;
-      margin: 20px auto;
+      margin: 15px auto;
       padding: 8px 20px;
       text-align: center;
-      max-width: 70%;
+      max-width: 85%;
       width: 100%;
       border-radius: 4px;
       border: solid 1px #3498db;
@@ -44,14 +51,23 @@
     }
     .ss-steemconnect-btn {
       display: block;
-      margin: 20px auto;
+      margin: 15px auto;
       padding: 8px 20px;
       text-decoration: none;
       background: #3498db;
       color: #fff;
       width: 100%;
-      max-width: 70%;
+      max-width: 85%;
       border-radius: 4px;
+    }
+    .ss-close-modal {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      transform: rotate(45deg);
+      font-size: 40px;
+      line-height: 1;
+      cursor: pointer;
     }
   </style>
   </head>
@@ -67,13 +83,6 @@
     data-content="Well would you look at that, I think this will be a pretty cool addition to the eco-system"
     >Share To Steem -></button>
 
-    <div class="ss-modal">
-      <h2 class="ss-heading-2">Steem Share</h2>
-      <p class="ss-p">Enter your username</p>
-      <input class="ss-username" type="text" placeholder="username">
-      <a class="ss-steemconnect-btn" href="#" target="_blank">Post With Steemconnect</a>
-    </div>
-    <div class="ss-overlay"></div>
 
     <script
   src="https://code.jquery.com/jquery-3.2.1.min.js"
@@ -81,11 +90,24 @@
   crossorigin="anonymous"></script>
 
     <script>
+    let modalTemplate =
+      `<div class="ss-modal">
+          <h2 class="ss-heading-2">Steem Share</h2>
+          <p class="ss-p">Enter your username</p>
+          <input class="ss-username" type="text" placeholder="username">
+          <a class="ss-steemconnect-btn" href="#" target="_blank">Post With Steemconnect</a>
+          <span class="ss-close-modal">&#43;</span>
+        </div>
+        <div class="ss-overlay"></div>`;
 
+    $('body').append(modalTemplate)
 
     $('.ss-steem-share').on('click', (e) => {
-        //open modal
         $('.ss-modal, .ss-overlay').fadeIn(200);
+    })
+
+    $('.ss-close-modal').on('click', (e) => {
+        $('.ss-modal, .ss-overlay').fadeOut(200);
     })
 
      $('.ss-username').keyup(( e ) => {
