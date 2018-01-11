@@ -2,20 +2,80 @@
   <head>
 
   <style>
-    * {box-sizing: boder-box;}
-    body {margin: 0, padding: 0}
-
+    * {box-sizing: border-box;}
+    body {
+      margin: 0, padding: 0;
+      font-family: inconsolate, 'courier new', courier, monospace;
+    }
+    .ss-overlay {
+      position: fixed;
+      top: 0; right: 0; bottom: 0; left:0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+    }
+    .ss-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      background-color: #fff;
+      z-index: 1100;
+      width: 450px;
+      max-width: 70%;
+      padding: 30px 10px;
+      text-align: center;
+      border-radius: 4px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+    }
+    .ss-username {
+      display: block;
+      margin: 20px auto;
+      padding: 8px 20px;
+      text-align: center;
+      max-width: 70%;
+      width: 100%;
+      border-radius: 4px;
+      border: solid 1px #3498db;
+    }
+    .ss-username:focus {
+      outline: 0;
+    }
+    .ss-steemconnect-btn {
+      display: block;
+      margin: 20px auto;
+      padding: 8px 20px;
+      text-decoration: none;
+      background: #3498db;
+      color: #fff;
+      width: 100%;
+      max-width: 70%;
+      border-radius: 4px;
+    }
   </style>
   </head>
   <body>
 
     Hello world
-    <button class="steem-share">Share To Steem -></button>
+    <button class="ss-steem-share">Share To Steem -></button>
+
+    <div class="ss-modal">
+      <h2 class="ss-heading-2">Steem Share</h2>
+      <p class="ss-p">Enter your username</p>
+      <input class="ss-username" type="text" placeholder="username">
+      <a class="ss-steemconnect-btn" href="#">Post With Steemconnect</a>
+    </div>
+    <div class="ss-overlay"></div>
+
     <script
   src="https://code.jquery.com/jquery-3.2.1.min.js"
   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
   crossorigin="anonymous"></script>
+
     <script>
+
+    $('.steem-share').on('click', (e) => {
+
+    })
 /*
   -> Click on Post To Steem Button
   -> modal posts up to enter username
