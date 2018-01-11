@@ -4,6 +4,18 @@
   <head>
   <meta charset="utf8">
   <style>
+    .ss-steem-share-style {
+      background-color: #3498db;
+      color: #fff;
+      padding: 8px 12px;
+      border: solid 0px;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      cursor: pointer;
+    }
+    .ss-steem-share-style:focus {
+      outline: none;
+    }
     .ss-modal * {box-sizing: border-box;}
     .ss-modal * {
       margin: 0, padding: 0;
@@ -87,7 +99,7 @@
     Hello world
     <br>
     <br>
-    <button class="ss-steem-share"
+    <button class="ss-steem-share ss-steem-share-style"
     data-title="This is a test from steem share"
     data-category="testing-testing"
     data-image="https://i.imgsafe.org/a7/a751d45421.jpeg"
@@ -152,7 +164,7 @@
         return string;
       }
     }
-    SteemShare.init()
+    SteemShare.init();
     </script>
   </body>
 </html>
