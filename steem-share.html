@@ -4,8 +4,8 @@
   <head>
   <meta charset="utf8">
   <style>
-    * {box-sizing: border-box;}
-    body {
+    .ss-modal * {box-sizing: border-box;}
+    .ss-modal * {
       margin: 0, padding: 0;
       font-family: inconsolate, 'courier new', courier, monospace;
     }
@@ -88,66 +88,71 @@
     <br>
     <br>
     <button class="ss-steem-share"
-    data-title="This is a test from steem share",
-    data-category="testing-testing",
-    data-image="https://i.imgsafe.org/a7/a751d45421.jpeg",
+    data-title="This is a test from steem share"
+    data-category="testing-testing"
+    data-image="https://i.imgsafe.org/a7/a751d45421.jpeg"
     data-content="Well would you look at that, I think this will be a pretty cool addition to the eco-system"
+    data-credit="<center>This post was shared from [Website Name](http://websitelink) Using Steem Share</center>"
     >Share To Steem -></button>
 
     <script>
-    let modalTemplate =
-      `<div class="ss-modal">
+    const SteemShare = {
+      modalTemplate: `<div class="ss-modal">
           <h2 class="ss-heading-2">Steem Share</h2>
           <p class="ss-p">Enter your username</p>
           <input class="ss-username" type="text" placeholder="username">
           <a class="ss-steemconnect-btn" href="#" target="_blank">Post With Steemconnect</a>
           <span class="ss-close-modal" >&#43;</span>
         </div>
-        <div class="ss-overlay"></div>`;
+        <div class="ss-overlay"></div>`,
+      init: () => {
+        document.querySelector('body').innerHTML += SteemShare.modalTemplate
 
-    document.querySelector('body').innerHTML += modalTemplate
+        SteemShare.uiActions()
+      },
+      uiActions: () => {
+        let modal = document.querySelector('.ss-modal');
+        let overlay = document.querySelector('.ss-overlay');
 
-    let modal = document.querySelector('.ss-modal');
-    let overlay = document.querySelector('.ss-overlay');
+        document.querySelector('.ss-steem-share').addEventListener('click', () => {
+          overlay.classList.add('ss-active')
+          modal.classList.add('ss-active')
+          setTimeout(()=> {
+            overlay.classList.add('ss-active-opacity')
+            modal.classList.add('ss-active-opacity')
+          }, 50)
+        })
 
-    document.querySelector('.ss-steem-share').addEventListener('click', () => {
-      overlay.classList.add('ss-active')
-      modal.classList.add('ss-active')
-      setTimeout(()=> {
-        overlay.classList.add('ss-active-opacity')
-        modal.classList.add('ss-active-opacity')
-      }, 50)
-    })
+        document.querySelector('.ss-close-modal').addEventListener('click', () => {
+          overlay.classList.remove('ss-active','ss-active-opacity')
+          modal.classList.remove('ss-active','ss-active-opacity')
+        })
 
-    document.querySelector('.ss-close-modal').addEventListener('click', () => {
-      overlay.classList.remove('ss-active','ss-active-opacity')
-      modal.classList.remove('ss-active','ss-active-opacity')
-    })
+        document.querySelector('.ss-username').addEventListener('keyup', () => {
+          let data = document.querySelector('.ss-steem-share').dataset
 
-    document.querySelector('.ss-username').addEventListener('keyup', () => {
-      let data = document.querySelector('.ss-steem-share').dataset
-      console.log(data.image)
+          let shareDetails = {
+            category: data.category,
+            author: document.querySelector('.ss-username').value,
+            permlink: SteemShare.randomString() + '-post',
+            title: encodeURIComponent(data.title),
+            body: encodeURIComponent(`${data.credit} ![${data.image}](${data.image}) ${data.content}`)
+          }
 
-       let shareDetails = {
-         category: data.category,
-         author: document.querySelector('.ss-username').value,
-         permlink: randomString() + '-post',
-         title: data.title,
-         body: encodeURIComponent(`![${data.image}](${data.image}) ${data.content}`)
-       }
-
-      let steemconnectLink = `https://v2.steemconnect.com/sign/comment?parent_permlink=${shareDetails.category}&author=${shareDetails.author}&permlink=${shareDetails.permlink}&title=${shareDetails.title}&body=${shareDetails.body}`
-       document.querySelector('.ss-steemconnect-btn').setAttribute('href', steemconnectLink);
-    });
-
-     function randomString() {
-       let string = ''
-       let allowedChars = "abcdefghijklmnopqrstuvwxyz0123456789";
-       for (var i = 0; i < 32; i++){
-         string += allowedChars.charAt(Math.floor(Math.random() * allowedChars.length));
-       }
-       return string;
-   }
+          let steemconnectLink = `https://v2.steemconnect.com/sign/comment?parent_permlink=${shareDetails.category}&author=${shareDetails.author}&permlink=${shareDetails.permlink}&title=${shareDetails.title}&body=${shareDetails.body}`
+          document.querySelector('.ss-steemconnect-btn').setAttribute('href', steemconnectLink);
+        });
+      },
+      randomString: () => {
+        let string = ''
+        let allowedChars = "abcdefghijklmnopqrstuvwxyz0123456789";
+        for (var i = 0; i < 32; i++){
+          string += allowedChars.charAt(Math.floor(Math.random() * allowedChars.length));
+        }
+        return string;
+      }
+    }
+    SteemShare.init()
     </script>
   </body>
 </html>
